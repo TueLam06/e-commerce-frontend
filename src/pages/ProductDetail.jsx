@@ -1,14 +1,35 @@
 import { useParams } from "react-router-dom";
-import products from "../data/products";
+import { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 
 function ProductDetail() {
     const { id } = useParams();
     const { addToCart } = useCart();
-    const product = products.find(
-        (item) => item.id === Number(id)
-    );
-    console.log("onAddToCart:", addToCart);
+    const [product, setProduct] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetch(`http://localhost:5000/api/products/${id}`)
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Không tìm thấy sản phẩm");
+                }
+                return res.json();
+            })
+            .then((data) => {
+                setProduct(data);
+                setLoading(false);
+            })
+            .catch((err) => {
+                setError(err.message);
+                setLoading(false);
+            });
+    }, [id]);
+
+    if (loading) return <p>Đang tải...</p>;
+    if (error) return <p>Lỗi: {error}</p>;
+
     return (
         <div>
             <h1>{product.name}</h1>
@@ -20,7 +41,6 @@ function ProductDetail() {
             <button onClick={() => {addToCart(product)}}>
                 Add to cart
             </button>
-
         </div>
     );
 }
