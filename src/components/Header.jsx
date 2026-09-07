@@ -13,6 +13,7 @@ function Header({title}) {
                 <Link to="/products"> Products </Link>
                 <Link to="/chat"> Chatbot </Link>
                 <Link to="/cart"> Cart {cartCount > 0 ? `(${cartCount})` : ""}</Link>
+                <Link to="login"> Login </Link>
             </div>
         </nav>
     )

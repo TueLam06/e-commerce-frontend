@@ -5,13 +5,26 @@ function ProductCard({ product}) {
     const {addToCart} = useCart()
     return (
         <div className="product-card">
-            <Link to={`/products/${product.id}`}> <h3>{product.name}</h3> </Link>
 
-            <p>{Number(product.price).toLocaleString("vi-VN")}₫</p>
+            {product.image && (
+                <img
+                    src={product.image}
+                    alt={product.name}
+                />
+            )}
+
+            <Link to={`/products/${product.id}`}>
+                <h3>{product.name}</h3>
+            </Link>
+
+            <p>
+                {Number(product.price).toLocaleString("vi-VN")}₫
+            </p>
 
             <button onClick={() => addToCart(product)}>
                 Add to cart
             </button>
+
         </div>
     );
 }
