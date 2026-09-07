@@ -18,7 +18,7 @@ function ChatPage() {
             });
 
             const data = await res.json();
-            setMessages(prev => [...prev, {sender: 'bot', text: data.reply}]);
+            setMessages(prev => [...prev, {sender: 'bot', text: data.message, productIds: data.productIds}]);
         } catch (err) {
             console.error(err);
             setMessages(prev =>[...prev, { sender: 'bot', text: 'Xin lỗi, có lỗi xảy ra.' }])
@@ -36,6 +36,16 @@ function ChatPage() {
                     <div key={index}>
                         <b>{msg.sender === 'user' ? 'Bạn' : 'Bot'}:</b>
                         <ReactMarkdown>{msg.text}</ReactMarkdown>
+
+                        {msg.productIds?.length > 0 && (
+                            <div>
+                                {msg.productIds.map(id => (
+                                    <a key={id} href={`/products/${id}`}>
+                                        Xem sản phẩm {id}
+                                    </a>
+                                ))}
+                            </div>
+                            )}
                     </div>
                 ))}
                 {loading && (

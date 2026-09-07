@@ -7,7 +7,7 @@ function ProductCard({ product}) {
         <div className="product-card">
             <Link to={`/products/${product.id}`}> <h3>{product.name}</h3> </Link>
 
-            <p>{product.price} $</p>
+            <p>{Number(product.price).toLocaleString("vi-VN")}₫</p>
 
             <button onClick={() => addToCart(product)}>
                 Add to cart
