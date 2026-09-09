@@ -27,146 +27,122 @@ function Home() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-[400px]">
-                <span className="loading loading-spinner loading-lg text-primary"></span>
+            <div className="flex justify-center items-center min-h-[400px] bg-[#FAFAF8]">
+                <div className="w-8 h-8 rounded-full border-2 border-[#D9D6CC] border-t-[#2F5233] animate-spin" />
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="flex justify-center p-10">
-                <div className="alert alert-error max-w-lg">
-                    <span>Lỗi: {error}</span>
+            <div className="flex justify-center p-10 bg-[#FAFAF8] min-h-[400px]">
+                <div className="max-w-lg w-full rounded-md border border-[#E3C6C3] bg-[#FBF1F0] px-5 py-4 text-[#B3413B] text-sm">
+                    Lỗi: {error}
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-base-200">
+        <div className="min-h-screen bg-[#FAFAF8]">
 
             {/* HERO */}
-            <section className="relative overflow-hidden bg-base-100">
+            <section className="bg-[#2F5233] text-[#F5F3EE]">
+                <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
+                    <div className="max-w-2xl">
 
-                {/* Background decoration */}
-                <div className="absolute -top-32 -right-32 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
-
-                <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-secondary/20 rounded-full blur-3xl" />
-
-                <div className="relative max-w-7xl mx-auto px-6 py-24 md:py-32">
-
-                    <div className="max-w-3xl">
-
-                        <div className="badge badge-primary badge-lg mb-6">
-                            ✦ New Collection
-                        </div>
-
-                        <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
-                            Upgrade Your
-                            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-                            Digital Life.
-                        </span>
-                        </h1>
-
-                        <p className="mt-6 text-lg md:text-xl text-base-content/60 max-w-2xl leading-relaxed">
-                            Discover premium technology products designed
-                            for work, gaming and everything in between.
+                        <p className="text-sm tracking-wide text-[#B7C9AF] mb-4">
+                            Bộ sưu tập mới
                         </p>
 
-                        <div className="flex flex-wrap gap-4 mt-8">
+                        <h1
+                            className="text-4xl md:text-6xl leading-tight mb-6"
+                            style={{ fontFamily: "'Fraunces', serif" }}
+                        >
+                            Nâng cấp không gian sống của bạn.
+                        </h1>
 
-                            <button className="btn btn-primary btn-lg shadow-lg shadow-primary/30">
-                                Shop Now →
+                        <p className="text-[#D8E2D2] text-base md:text-lg max-w-xl leading-relaxed mb-10">
+                            Sản phẩm công nghệ chất lượng, chọn lọc kỹ càng cho công việc,
+                            giải trí và cuộc sống hằng ngày.
+                        </p>
+
+                        <div className="flex flex-wrap gap-4">
+                            <button className="rounded-md bg-[#F5F3EE] text-[#2F5233] px-6 py-3 font-medium hover:bg-white transition-colors">
+                                Mua ngay
                             </button>
-
-                            <button className="btn btn-outline btn-lg">
-                                Explore Products
+                            <button className="rounded-md border border-[#7C9473] text-[#F5F3EE] px-6 py-3 font-medium hover:bg-white/5 transition-colors">
+                                Xem sản phẩm
                             </button>
-
                         </div>
 
                     </div>
-
                 </div>
             </section>
 
 
             {/* FEATURED PRODUCTS */}
-            <section className="max-w-7xl mx-auto px-6 py-20">
+            <section className="max-w-6xl mx-auto px-6 py-20">
 
                 <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
-
                     <div>
-                        <div className="badge badge-secondary mb-3">
-                            Featured
-                        </div>
-
-                        <h2 className="text-4xl font-bold tracking-tight">
-                            Highlight Products
+                        <p className="text-sm tracking-wide text-[#6B6B65] mb-2">
+                            Nổi bật
+                        </p>
+                        <h2
+                            className="text-3xl md:text-4xl text-[#1A1A18]"
+                            style={{ fontFamily: "'Fraunces', serif" }}
+                        >
+                            Sản phẩm được yêu thích
                         </h2>
-
-                        <p className="mt-2 text-base-content/60">
-                            Hand-picked products for your setup.
+                        <p className="mt-2 text-[#6B6B65]">
+                            Lựa chọn kỹ càng dành riêng cho bạn.
                         </p>
                     </div>
 
-                    <button className="btn btn-ghost">
-                        View all →
+                    <button className="text-[#2F5233] font-medium underline underline-offset-2 self-start md:self-auto">
+                        Xem tất cả
                     </button>
-
                 </div>
 
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-
                     {featuredProducts.map((p) => (
                         <div
                             key={p.id}
-                            className="transition duration-300 hover:-translate-y-2"
+                            className="transition duration-300 hover:-translate-y-1"
                         >
                             <ProductCard product={p} />
                         </div>
                     ))}
-
                 </div>
 
             </section>
 
 
             {/* PROMO */}
-            <section className="max-w-7xl mx-auto px-6 pb-20">
+            <section className="max-w-6xl mx-auto px-6 pb-20">
+                <div className="rounded-2xl bg-[#2F5233] text-[#F5F3EE] p-10 md:p-16">
+                    <div className="max-w-xl">
+                        <p className="text-sm tracking-wide text-[#B7C9AF] mb-4">
+                            Ưu đãi có hạn
+                        </p>
 
-                <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary to-secondary text-primary-content">
+                        <h2
+                            className="text-3xl md:text-5xl leading-tight"
+                            style={{ fontFamily: "'Fraunces', serif" }}
+                        >
+                            Hoàn thiện góc làm việc của bạn.
+                        </h2>
 
-                    <div className="absolute -right-20 -top-20 w-72 h-72 bg-white/10 rounded-full blur-2xl" />
+                        <p className="mt-4 text-[#D8E2D2] text-lg">
+                            Tìm mọi thứ bạn cần, chỉ trong một nơi.
+                        </p>
 
-                    <div className="relative p-10 md:p-16">
-
-                        <div className="max-w-xl">
-
-                            <div className="badge bg-white/20 text-white border-none mb-4">
-                                Limited Offer
-                            </div>
-
-                            <h2 className="text-3xl md:text-5xl font-bold">
-                                Build your perfect setup.
-                            </h2>
-
-                            <p className="mt-4 opacity-80 text-lg">
-                                Find everything you need in one place.
-                            </p>
-
-                            <button className="btn bg-white text-primary border-none hover:bg-white/90 mt-8">
-                                Start Shopping
-                            </button>
-
-                        </div>
-
+                        <button className="rounded-md bg-[#F5F3EE] text-[#2F5233] px-6 py-3 font-medium hover:bg-white transition-colors mt-8">
+                            Mua sắm ngay
+                        </button>
                     </div>
-
                 </div>
-
             </section>
 
         </div>
