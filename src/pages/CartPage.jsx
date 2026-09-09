@@ -2,16 +2,19 @@ import Cart from "../components/Cart";
 import { useCart } from "../context/CartContext";
 
 function CartPage() {
-    const {cart, total, increaseQuantity, decreaseQuantity, removeFromCart} = useCart()
+    const {cart, formattedTotal, increaseQuantity, decreaseQuantity, removeFromCart} = useCart()
     return (
-        <Cart
-            cart={cart}
-            total={total}
-            onIncrease={increaseQuantity}
-            onDecrease={decreaseQuantity}
-            onRemove={removeFromCart}
-
-        />
+        <main className="min-h-screen bg-[#FAFAF8]">
+            <section className="max-w-6xl mx-auto px-6 py-10 md:py-14">
+                <Cart
+                    cart={cart}
+                    total={formattedTotal}
+                    onIncrease={increaseQuantity}
+                    onDecrease={decreaseQuantity}
+                    onRemove={removeFromCart}
+                />
+            </section>
+        </main>
     )
 }
 
