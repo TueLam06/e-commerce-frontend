@@ -1,35 +1,35 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, NavLink } from "react-router-dom";
+
+const navItemClass = ({ isActive }) =>
+    `block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+        isActive
+            ? "bg-[#2F5233] text-[#F5F3EE]"
+            : "text-[#6B6B65] hover:bg-[#EFEDE6] hover:text-[#1A1A18]"
+    }`;
 
 export default function AdminLayout() {
-    const location = useLocation();
-
-    const linkStyle = (path) => ({
-        display: "block",
-        marginBottom: 8,
-        padding: "6px 8px",
-        borderRadius: 4,
-        textDecoration: "none",
-        color: location.pathname.startsWith(path) ? "#fff" : "#333",
-        background: location.pathname.startsWith(path) ? "#333" : "transparent",
-    });
-
     return (
-        <div style={{ display: "flex" }}>
-            <aside style={{ width: 200, padding: 16, background: "#f5f5f5" }}>
-                <h3>Admin</h3>
-                <nav>
-                    <Link to="/admin" style={linkStyle("/admin/dashboard-never-match")}>
+        <div className="flex min-h-screen bg-[#FAFAF8]">
+            <aside className="w-56 shrink-0 border-r border-[#E5E3DC] bg-white px-4 py-6">
+                <h1
+                    className="text-lg mb-6 px-3 text-[#1A1A18]"
+                    style={{ fontFamily: "'Fraunces', serif" }}
+                >
+                    Admin
+                </h1>
+                <nav className="space-y-1">
+                    <NavLink to="/admin" end className={navItemClass}>
                         Trang chủ
-                    </Link>
-                    <Link to="/admin/products" style={linkStyle("/admin/products")}>
+                    </NavLink>
+                    <NavLink to="/admin/products" className={navItemClass}>
                         Sản phẩm
-                    </Link>
-                    <Link to="/admin/orders" style={linkStyle("/admin/orders")}>
+                    </NavLink>
+                    <NavLink to="/admin/orders" className={navItemClass}>
                         Đơn hàng
-                    </Link>
+                    </NavLink>
                 </nav>
             </aside>
-            <main style={{ flex: 1, padding: 16 }}>
+            <main className="flex-1 px-8 py-8">
                 <Outlet />
             </main>
         </div>
