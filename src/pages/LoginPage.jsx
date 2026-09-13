@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname;
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,8 +18,18 @@ export default function LoginPage() {
         setError('');
         setSubmitting(true);
         try {
-            await login(email, password);
-            navigate('/'); // đổi thành trang bạn muốn chuyển tới sau khi đăng nhập
+            const user = await login(email, password);
+
+            if (from) {
+                // Có nơi cụ thể bị đá ra trước đó (vd: /admin) -> quay lại đúng chỗ
+                navigate(from, { replace: true });
+            } else if (user.role === 'admin') {
+                // Admin đăng nhập trực tiếp qua /login -> vào thẳng trang quản trị
+                navigate('/admin', { replace: true });
+            } else {
+                // User thường -> về trang chủ
+                navigate('/', { replace: true });
+            }
         } catch (err) {
             setError(err.message);
         } finally {

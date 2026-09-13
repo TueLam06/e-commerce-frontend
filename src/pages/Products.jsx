@@ -58,14 +58,14 @@ function Products() {
             <section className="bg-[#2F5233]">
                 <div className="max-w-6xl mx-auto px-6 py-16 md:py-20">
                     <p className="mb-3 text-sm font-medium uppercase tracking-[0.2em] text-[#D8E2D2]">
-                        Our collection
+                        Bộ sưu tập của chúng tôi
                     </p>
 
                     <h1
                         className="text-4xl md:text-5xl font-normal text-[#F5F3EE]"
                         style={{ fontFamily: "'Fraunces', serif" }}
                     >
-                        All Products
+                        Chúng tôi có gì?
                     </h1>
 
                     <p className="mt-4 max-w-xl text-[#D8E2D2] leading-relaxed">
@@ -83,7 +83,7 @@ function Products() {
                             className="text-2xl md:text-3xl text-[#1A1A18]"
                             style={{ fontFamily: "'Fraunces', serif" }}
                         >
-                            Products
+                            Tất cả sản phẩm
                         </h2>
 
                         <p className="mt-2 text-sm text-[#6B6B65]">
