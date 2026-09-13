@@ -10,27 +10,59 @@ import CartPage from "./pages/CartPage";
 import Checkout from "./pages/Checkout";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import "./App.css";
+
+import AdminRoute from "./routes/AdminRoute";
+import AdminLayout from "./admin/layout/AdminLayout";
+import ProductList from "./admin/pages/ProductList";
+import ProductForm from "./admin/pages/ProductForm";
+import AdminHome from "./admin/pages/AdminHome";
+import OrderList from "./admin/pages/OrderList";
+import OrderDetail from "./admin/pages/OrderDetail";
 
 function App() {
     return (
-        <CartProvider>
-            <BrowserRouter>
-                <AuthProvider>
-                <Header title="My website" />
+        <BrowserRouter>
+            <AuthProvider>
+                <CartProvider>
                     <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/products" element={<Products />} />
-                        <Route path="/products/:id" element={<ProductDetail />} />
-                        <Route path="/chat" element={<ChatPage />} />
-                        <Route path="/cart" element={<CartPage />} />
-                        <Route path="/checkout" element={<Checkout />}/>
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/register" element={<RegisterPage />} />
+                        <Route
+                            path="/*"
+                            element={
+                                <>
+                                    <Header title="Stuff Corner" />
+                                    <Routes>
+                                        <Route path="/" element={<Home />} />
+                                        <Route path="/products" element={<Products />} />
+                                        <Route path="/products/:id" element={<ProductDetail />} />
+                                        <Route path="/chat" element={<ChatPage />} />
+                                        <Route path="/cart" element={<CartPage />} />
+                                        <Route path="/checkout" element={<Checkout />} />
+                                        <Route path="/login" element={<LoginPage h/>} />
+                                        <Route path="/register" element={<RegisterPage />} />
+                                    </Routes>
+                                </>
+                            }
+                        />
+
+                        <Route
+                            path="/admin/*"
+                            element={
+                                <AdminRoute>
+                                    <AdminLayout />
+                                </AdminRoute>
+                            }
+                        >
+                            <Route index element={<AdminHome />} />
+                            <Route path="products" element={<ProductList />} />
+                            <Route path="products/new" element={<ProductForm />} />
+                            <Route path="products/:id/edit" element={<ProductForm />} />
+                            <Route path="orders" element={<OrderList />} />
+                            <Route path="orders/:id" element={<OrderDetail />} />
+                        </Route>
                     </Routes>
-                </AuthProvider>
-            </BrowserRouter>
-        </CartProvider>
+                </CartProvider>
+            </AuthProvider>
+        </BrowserRouter>
     );
 }
 export default App;
