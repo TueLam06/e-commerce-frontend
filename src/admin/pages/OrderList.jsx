@@ -13,6 +13,14 @@ const STATUS_LABELS = {
 
 const STATUS_OPTIONS = Object.keys(STATUS_LABELS);
 
+const STATUS_BADGE = {
+    pending: "bg-[#FBF1DF] text-[#8A6D1D]",
+    confirmed: "bg-[#E7EEF7] text-[#2F5A8A]",
+    shipping: "bg-[#EAE7F7] text-[#5A3E9E]",
+    completed: "bg-[#E5EEE0] text-[#2F5233]",
+    cancelled: "bg-[#FBF1F0] text-[#B3413B]",
+};
+
 export default function OrderList() {
     const { token } = useAuth();
     const [orders, setOrders] = useState([]);
@@ -63,81 +71,119 @@ export default function OrderList() {
 
     return (
         <div>
-            <h2>Quản lý đơn hàng</h2>
+            <div className="flex items-center justify-between mb-6">
+                <h2
+                    className="text-2xl text-[#1A1A18]"
+                    style={{ fontFamily: "'Fraunces', serif" }}
+                >
+                    Đơn hàng
+                </h2>
 
-            <div style={{ marginBottom: 16 }}>
-                <label>
-                    Lọc theo trạng thái:{" "}
-                    <select
-                        value={filterStatus}
-                        onChange={(e) => setFilterStatus(e.target.value)}
-                    >
-                        <option value="">Tất cả</option>
-                        {STATUS_OPTIONS.map((s) => (
-                            <option key={s} value={s}>
-                                {STATUS_LABELS[s]}
-                            </option>
-                        ))}
-                    </select>
-                </label>
+                <select
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                    className="rounded-md border border-[#D9D6CC] bg-white px-3 py-2 text-sm text-[#1A1A18]"
+                >
+                    <option value="">Tất cả trạng thái</option>
+                    {STATUS_OPTIONS.map((s) => (
+                        <option key={s} value={s}>
+                            {STATUS_LABELS[s]}
+                        </option>
+                    ))}
+                </select>
             </div>
 
-            {loading && <p>Đang tải...</p>}
-            {error && <p style={{ color: "red" }}>{error}</p>}
+            {loading && (
+                <div className="flex justify-center py-16">
+                    <div className="w-8 h-8 rounded-full border-2 border-[#D9D6CC] border-t-[#2F5233] animate-spin" />
+                </div>
+            )}
+
+            {error && (
+                <div className="rounded-md border border-[#E3C6C3] bg-[#FBF1F0] px-5 py-4 text-[#B3413B] text-sm">
+                    Lỗi: {error}
+                </div>
+            )}
 
             {!loading && !error && (
-                <table border="1" cellPadding="8" style={{ width: "100%", borderCollapse: "collapse" }}>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Khách hàng</th>
-                        <th>SĐT</th>
-                        <th>Tổng tiền</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày đặt</th>
-                        <th>Hành động</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {orders.map((order) => (
-                        <tr key={order.id}>
-                            <td>{order.id}</td>
-                            <td>{order.customer_name}</td>
-                            <td>{order.phone}</td>
-                            <td>{Number(order.total).toLocaleString("vi-VN")}đ</td>
-                            <td>
-                                <select
-                                    value={order.status}
-                                    onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                                >
-                                    {STATUS_OPTIONS.map((s) => (
-                                        <option key={s} value={s}>
-                                            {STATUS_LABELS[s]}
-                                        </option>
-                                    ))}
-                                </select>
-                            </td>
-                            <td>
-                                {order.created_at
-                                    ? new Date(order.created_at).toLocaleString("vi-VN")
-                                    : ""}
-                            </td>
-                            <td>
-                                <Link to={`/admin/orders/${order.id}`}>Xem chi tiết</Link>{" "}
-                                |{" "}
-                                <button onClick={() => handleDelete(order.id)}>Xóa</button>
-                            </td>
+                <div className="rounded-md border border-[#E5E3DC] bg-white overflow-hidden">
+                    <table className="w-full text-sm">
+                        <thead>
+                        <tr className="border-b border-[#E5E3DC] bg-[#FAFAF8] text-left text-[#6B6B65]">
+                            <th className="px-4 py-3 font-medium">ID</th>
+                            <th className="px-4 py-3 font-medium">Khách hàng</th>
+                            <th className="px-4 py-3 font-medium">SĐT</th>
+                            <th className="px-4 py-3 font-medium">Tổng tiền</th>
+                            <th className="px-4 py-3 font-medium">Trạng thái</th>
+                            <th className="px-4 py-3 font-medium">Ngày đặt</th>
+                            <th className="px-4 py-3 font-medium text-right">Hành động</th>
                         </tr>
-                    ))}
-                    {orders.length === 0 && (
-                        <tr>
-                            <td colSpan="7" style={{ textAlign: "center" }}>
-                                Không có đơn hàng nào
-                            </td>
-                        </tr>
-                    )}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {orders.map((order) => (
+                            <tr
+                                key={order.id}
+                                className="border-b border-[#EFEDE6] last:border-0 text-[#1A1A18]"
+                            >
+                                <td className="px-4 py-3">#{order.id}</td>
+                                <td className="px-4 py-3">{order.customer_name}</td>
+                                <td className="px-4 py-3 text-[#6B6B65]">{order.phone}</td>
+                                <td className="px-4 py-3">
+                                    {Number(order.total).toLocaleString("vi-VN")}đ
+                                </td>
+                                <td className="px-4 py-3">
+                                    <div className="flex items-center gap-2">
+                                            <span
+                                                className={`inline-block px-2 py-1 rounded text-xs font-medium ${STATUS_BADGE[order.status]}`}
+                                            >
+                                                {STATUS_LABELS[order.status]}
+                                            </span>
+                                        <select
+                                            value={order.status}
+                                            onChange={(e) =>
+                                                handleStatusChange(order.id, e.target.value)
+                                            }
+                                            className="rounded border border-[#D9D6CC] bg-white text-xs px-2 py-1"
+                                        >
+                                            {STATUS_OPTIONS.map((s) => (
+                                                <option key={s} value={s}>
+                                                    {STATUS_LABELS[s]}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </td>
+                                <td className="px-4 py-3 text-[#6B6B65]">
+                                    {order.created_at
+                                        ? new Date(order.created_at).toLocaleString("vi-VN")
+                                        : ""}
+                                </td>
+                                <td className="px-4 py-3 text-right whitespace-nowrap">
+                                    <Link
+                                        to={`/admin/orders/${order.id}`}
+                                        className="text-[#2F5233] font-medium underline underline-offset-2 mr-4"
+                                    >
+                                        Chi tiết
+                                    </Link>
+                                    <button
+                                        onClick={() => handleDelete(order.id)}
+                                        className="text-[#B3413B] font-medium underline underline-offset-2"
+                                    >
+                                        Xóa
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                        {orders.length === 0 && (
+                            <tr>
+                                <td colSpan="7" className="px-4 py-10 text-center text-[#6B6B65]">
+                                    Không có đơn hàng nào
+                                </td>
+                            </tr>
+                        )}
+                        </tbody>
+                    </table>
+                </div>
             )}
         </div>
     );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getOrderById, updateOrderStatus } from "../api/adminOrders";
 
@@ -49,76 +49,133 @@ export default function OrderDetail() {
         }
     };
 
-    if (loading) return <p>Đang tải...</p>;
-    if (error) return <p style={{ color: "red" }}>{error}</p>;
+    if (loading) {
+        return (
+            <div className="flex justify-center py-16">
+                <div className="w-8 h-8 rounded-full border-2 border-[#D9D6CC] border-t-[#2F5233] animate-spin" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="rounded-md border border-[#E3C6C3] bg-[#FBF1F0] px-5 py-4 text-[#B3413B] text-sm max-w-lg">
+                Lỗi: {error}
+            </div>
+        );
+    }
+
     if (!order) return null;
 
     return (
-        <div>
-            <button onClick={() => navigate(-1)}>← Quay lại</button>
-            <h2>Đơn hàng #{order.id}</h2>
+        <div className="max-w-4xl">
+            <button
+                onClick={() => navigate(-1)}
+                className="text-sm text-[#6B6B65] hover:text-[#1A1A18] mb-4"
+            >
+                ← Quay lại
+            </button>
 
-            <div style={{ marginBottom: 16 }}>
-                <p><strong>Khách hàng:</strong> {order.customer_name}</p>
-                <p><strong>SĐT:</strong> {order.phone}</p>
-                <p><strong>Địa chỉ:</strong> {order.address}</p>
-                <p><strong>Tổng tiền:</strong> {Number(order.total).toLocaleString("vi-VN")}đ</p>
-                <p>
-                    <strong>Ngày đặt:</strong>{" "}
-                    {order.created_at ? new Date(order.created_at).toLocaleString("vi-VN") : ""}
-                </p>
-                <p>
-                    <strong>Trạng thái:</strong>{" "}
-                    <select
-                        value={order.status}
-                        disabled={saving}
-                        onChange={(e) => handleStatusChange(e.target.value)}
-                    >
-                        {STATUS_OPTIONS.map((s) => (
-                            <option key={s} value={s}>
-                                {STATUS_LABELS[s]}
-                            </option>
-                        ))}
-                    </select>
-                </p>
+            <h2
+                className="text-2xl text-[#1A1A18] mb-6"
+                style={{ fontFamily: "'Fraunces', serif" }}
+            >
+                Đơn hàng #{order.id}
+            </h2>
+
+            <div className="rounded-md border border-[#E5E3DC] bg-white p-6 mb-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                    <div>
+                        <p className="text-[#6B6B65] mb-1">Khách hàng</p>
+                        <p className="text-[#1A1A18] font-medium">{order.customer_name}</p>
+                    </div>
+                    <div>
+                        <p className="text-[#6B6B65] mb-1">SĐT</p>
+                        <p className="text-[#1A1A18] font-medium">{order.phone}</p>
+                    </div>
+                    <div className="sm:col-span-2">
+                        <p className="text-[#6B6B65] mb-1">Địa chỉ</p>
+                        <p className="text-[#1A1A18] font-medium">{order.address}</p>
+                    </div>
+                    <div>
+                        <p className="text-[#6B6B65] mb-1">Tổng tiền</p>
+                        <p className="text-[#1A1A18] font-medium">
+                            {Number(order.total).toLocaleString("vi-VN")}đ
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-[#6B6B65] mb-1">Ngày đặt</p>
+                        <p className="text-[#1A1A18] font-medium">
+                            {order.created_at
+                                ? new Date(order.created_at).toLocaleString("vi-VN")
+                                : ""}
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-[#6B6B65] mb-1">Trạng thái</p>
+                        <select
+                            value={order.status}
+                            disabled={saving}
+                            onChange={(e) => handleStatusChange(e.target.value)}
+                            className="rounded-md border border-[#D9D6CC] bg-white px-3 py-2 text-sm text-[#1A1A18]"
+                        >
+                            {STATUS_OPTIONS.map((s) => (
+                                <option key={s} value={s}>
+                                    {STATUS_LABELS[s]}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <h3>Sản phẩm trong đơn</h3>
-            <table border="1" cellPadding="8" style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                <tr>
-                    <th>Ảnh</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Số lượng</th>
-                    <th>Đơn giá lúc mua</th>
-                    <th>Thành tiền</th>
-                </tr>
-                </thead>
-                <tbody>
-                {order.items.map((item) => (
-                    <tr key={item.id}>
-                        <td>
-                            {item.image ? (
-                                <img src={item.image} alt={item.product_name} width="50" />
-                            ) : (
-                                "—"
-                            )}
-                        </td>
-                        <td>
-                            {item.product_name}
-                            {item.product_id === null && (
-                                <em style={{ color: "gray" }}> (sản phẩm đã bị xóa)</em>
-                            )}
-                        </td>
-                        <td>{item.quantity}</td>
-                        <td>{Number(item.price_at_purchase).toLocaleString("vi-VN")}đ</td>
-                        <td>
-                            {(item.quantity * item.price_at_purchase).toLocaleString("vi-VN")}đ
-                        </td>
+            <h3 className="text-lg text-[#1A1A18] mb-3" style={{ fontFamily: "'Fraunces', serif" }}>
+                Sản phẩm trong đơn
+            </h3>
+
+            <div className="rounded-md border border-[#E5E3DC] bg-white overflow-hidden">
+                <table className="w-full text-sm">
+                    <thead>
+                    <tr className="border-b border-[#E5E3DC] bg-[#FAFAF8] text-left text-[#6B6B65]">
+                        <th className="px-4 py-3 font-medium">Ảnh</th>
+                        <th className="px-4 py-3 font-medium">Tên sản phẩm</th>
+                        <th className="px-4 py-3 font-medium">Số lượng</th>
+                        <th className="px-4 py-3 font-medium">Đơn giá</th>
+                        <th className="px-4 py-3 font-medium text-right">Thành tiền</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {order.items.map((item) => (
+                        <tr key={item.id} className="border-b border-[#EFEDE6] last:border-0">
+                            <td className="px-4 py-3">
+                                {item.image ? (
+                                    <img
+                                        src={item.image}
+                                        alt={item.product_name}
+                                        className="w-10 h-10 object-cover rounded"
+                                    />
+                                ) : (
+                                    <span className="text-[#6B6B65]">—</span>
+                                )}
+                            </td>
+                            <td className="px-4 py-3 text-[#1A1A18]">
+                                {item.product_name}
+                                {item.product_id === null && (
+                                    <span className="text-[#6B6B65] italic"> (đã xóa)</span>
+                                )}
+                            </td>
+                            <td className="px-4 py-3 text-[#1A1A18]">{item.quantity}</td>
+                            <td className="px-4 py-3 text-[#1A1A18]">
+                                {Number(item.price_at_purchase).toLocaleString("vi-VN")}đ
+                            </td>
+                            <td className="px-4 py-3 text-right text-[#1A1A18] font-medium">
+                                {(item.quantity * item.price_at_purchase).toLocaleString("vi-VN")}đ
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }

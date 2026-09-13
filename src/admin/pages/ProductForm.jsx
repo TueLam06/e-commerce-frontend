@@ -13,6 +13,10 @@ const emptyForm = {
     category_id: "",
 };
 
+const inputClass =
+    "w-full rounded-md border border-[#D9D6CC] bg-white px-3 py-2 text-sm text-[#1A1A18] focus:outline-none focus:border-[#2F5233]";
+const labelClass = "block text-sm text-[#6B6B65] mb-1";
+
 export default function ProductForm() {
     const { id } = useParams();
     const isEdit = Boolean(id);
@@ -26,6 +30,8 @@ export default function ProductForm() {
     const [error, setError] = useState("");
 
     // Lấy danh sách categories cho dropdown
+    // TODO: xác nhận lại path đúng sau khi có nội dung admin.categories.routes.js
+    // (path hiện tại có thể đang bị route GET /api/admin/products/:id nuốt mất)
     useEffect(() => {
         authFetch("/api/admin/products/categories", { token })
             .then(setCategories)
@@ -41,7 +47,8 @@ export default function ProductForm() {
                     price: data.price ?? "",
                     stock: data.stock ?? "",
                     description: data.description ?? "",
-                    image_url: data.image_url ?? "",
+                    // Cột DB tên là "image", không phải "image_url"
+                    image_url: data.image ?? "",
                     category_id: data.category_id ?? "",
                 });
             })
@@ -76,7 +83,7 @@ export default function ProductForm() {
             } else {
                 await createProduct(payload, token);
             }
-            navigate("/admin");
+            navigate("/admin/products");
         } catch (err) {
             setError(err.message);
         } finally {
@@ -84,44 +91,102 @@ export default function ProductForm() {
         }
     };
 
-    if (loading) return <div>Đang tải...</div>;
+    if (loading) {
+        return (
+            <div className="flex justify-center py-16">
+                <div className="w-8 h-8 rounded-full border-2 border-[#D9D6CC] border-t-[#2F5233] animate-spin" />
+            </div>
+        );
+    }
 
     return (
-        <div>
-            <h2>{isEdit ? "Sửa sản phẩm" : "Thêm sản phẩm mới"}</h2>
-            {error && <div style={{ color: "red", marginBottom: 12 }}>{error}</div>}
+        <div className="max-w-xl">
+            <h2
+                className="text-2xl text-[#1A1A18] mb-6"
+                style={{ fontFamily: "'Fraunces', serif" }}
+            >
+                {isEdit ? "Sửa sản phẩm" : "Thêm sản phẩm mới"}
+            </h2>
 
-            <form onSubmit={handleSubmit} style={{ maxWidth: 400, display: "flex", flexDirection: "column", gap: 12 }}>
-                <label>
-                    Tên sản phẩm
-                    <input name="name" value={form.name} onChange={handleChange} required />
-                </label>
+            {error && (
+                <div className="rounded-md border border-[#E3C6C3] bg-[#FBF1F0] px-4 py-3 text-[#B3413B] text-sm mb-6">
+                    {error}
+                </div>
+            )}
 
-                <label>
-                    Giá
-                    <input type="number" name="price" value={form.price} onChange={handleChange} required min="0" />
-                </label>
+            <form
+                onSubmit={handleSubmit}
+                className="rounded-md border border-[#E5E3DC] bg-white p-6 flex flex-col gap-4"
+            >
+                <div>
+                    <label className={labelClass}>Tên sản phẩm</label>
+                    <input
+                        className={inputClass}
+                        name="name"
+                        value={form.name}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label className={labelClass}>Giá</label>
+                    <input
+                        className={inputClass}
+                        type="number"
+                        name="price"
+                        value={form.price}
+                        onChange={handleChange}
+                        required
+                        min="0"
+                    />
+                </div>
 
                 {!isEdit && (
-                    <label>
-                        Tồn kho ban đầu
-                        <input type="number" name="stock" value={form.stock} onChange={handleChange} required min="0" />
-                    </label>
+                    <div>
+                        <label className={labelClass}>Tồn kho ban đầu</label>
+                        <input
+                            className={inputClass}
+                            type="number"
+                            name="stock"
+                            value={form.stock}
+                            onChange={handleChange}
+                            required
+                            min="0"
+                        />
+                    </div>
                 )}
 
-                <label>
-                    Mô tả
-                    <textarea name="description" value={form.description} onChange={handleChange} rows={3} />
-                </label>
+                <div>
+                    <label className={labelClass}>Mô tả</label>
+                    <textarea
+                        className={inputClass}
+                        name="description"
+                        value={form.description}
+                        onChange={handleChange}
+                        rows={3}
+                    />
+                </div>
 
-                <label>
-                    Link ảnh
-                    <input name="image_url" value={form.image_url} onChange={handleChange} />
-                </label>
+                <div>
+                    <label className={labelClass}>Link ảnh</label>
+                    <input
+                        className={inputClass}
+                        name="image_url"
+                        value={form.image_url}
+                        onChange={handleChange}
+                    />
+                </div>
 
-                <label>
-                    Danh mục
-                    <select name="category_id" value={form.category_id} onChange={handleChange} required>
+                <div>
+                    <label className={labelClass}>Danh mục</label>
+                    <select
+                        className={inputClass}
+                        name="category_id"
+                        value={form.category_id}
+                        onChange={handleChange}
+                        required
+                    >
                         <option value="">-- Chọn danh mục --</option>
                         {categories.map((cat) => (
                             <option key={cat.id} value={cat.id}>
@@ -129,9 +194,13 @@ export default function ProductForm() {
                             </option>
                         ))}
                     </select>
-                </label>
+                </div>
 
-                <button type="submit" disabled={saving}>
+                <button
+                    type="submit"
+                    disabled={saving}
+                    className="mt-2 rounded-md bg-[#2F5233] text-[#F5F3EE] px-6 py-2.5 font-medium hover:bg-[#274529] transition-colors disabled:opacity-60"
+                >
                     {saving ? "Đang lưu..." : isEdit ? "Cập nhật" : "Thêm sản phẩm"}
                 </button>
             </form>
