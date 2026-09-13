@@ -30,8 +30,6 @@ export default function ProductForm() {
     const [error, setError] = useState("");
 
     // Lấy danh sách categories cho dropdown
-    // TODO: xác nhận lại path đúng sau khi có nội dung admin.categories.routes.js
-    // (path hiện tại có thể đang bị route GET /api/admin/products/:id nuốt mất)
     useEffect(() => {
         authFetch("/api/admin/products/categories", { token })
             .then(setCategories)
