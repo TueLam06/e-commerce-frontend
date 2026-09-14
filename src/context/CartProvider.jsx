@@ -2,7 +2,10 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { CartContext } from "./CartContext";
 import { useAuth } from "./AuthContext";
 
-const CART_API = "http://localhost:5000/api/cart";
+const API_BASE =
+    import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+const CART_API = `${API_BASE}/api/cart`;
 
 export function CartProvider({ children }) {
     const { token } = useAuth();

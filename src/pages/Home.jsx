@@ -8,7 +8,7 @@ function Home() {
     const featuredProducts = products.filter((item) => item.feature);
 
     useEffect(() => {
-        fetch("http://localhost:5000/api/products")
+        fetch(`${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/products`)
             .then((res) => {
                 if (!res.ok) {
                     throw new Error("Không lấy được dữ liệu sản phẩm");
