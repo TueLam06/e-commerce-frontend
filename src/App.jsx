@@ -3,7 +3,7 @@ import { CartProvider } from "./context/CartProvider";
 import { AuthProvider } from "./context/AuthContext";
 import Header from "./components/Header";
 import Home from "./pages/Home";
-import ChatPage from "./pages/Chatpage";
+import ChatPage from "./pages/ChatPage";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import CartPage from "./pages/CartPage";
